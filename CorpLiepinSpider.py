@@ -65,7 +65,7 @@ def get_page_corp_list(url):
 def get_corp_info(url):
     try:
 	print "corp_url:\t" + url
-	time.sleep(5)
+	time.sleep(2)
         html = urllib2.urlopen(url)
         bsObj = BeautifulSoup(html,"lxml")
 	corp_name = bsObj.find("div",{"class":"name-and-welfare"}).find("h1").text.strip()
