@@ -36,7 +36,6 @@ def get_industry_corp_list(base_url):
 	    #process corps persist
 	    MysqlClient.get_instance().add_batch_corps(corps)
 	    print "collect base_url = {0}, page = {1}, corp_num = {2}".format(base_url, page, len(corps))
-	    time.sleep(1)
 
 	    page += 1
 	    url = base_url.format(page)
@@ -47,8 +46,8 @@ def get_industry_corp_list(base_url):
 
 def get_page_corp_list(url):
     try:
+	time.sleep(5)
 	html = urllib2.urlopen(url)
-	print html.read()
         bsObj = BeautifulSoup(html,"lxml")
         items = bsObj.findAll("a",{"class":"logo-box"})
 	corps = []
@@ -66,12 +65,14 @@ def get_page_corp_list(url):
 def get_corp_info(url):
     try:
 	print "corp_url:\t" + url
+	time.sleep(5)
         html = urllib2.urlopen(url)
         bsObj = BeautifulSoup(html,"lxml")
 	corp_name = bsObj.find("div",{"class":"name-and-welfare"}).find("h1").text.strip()
 	corp_name = corp_name[:len(corp_name) - 5]
 	corp_logo = bsObj.find("img",{"class":"bigELogo"})["src"]
-	corp_follow = get_follow_number(url)
+#	corp_follow = get_follow_number(url)
+	corp_follow = 0
 	corp_summary = ''
 	if bsObj.find("p",{"class":"profile"}) is not None:
 	    corp_summary = bsObj.find("p",{"class":"profile"}).text.strip()[:2000]
@@ -100,23 +101,11 @@ def get_follow_number(corp_base_url):
     corp_id = corp_base_url[corp_base_url.rfind("/")+1:]
     form_map = {'userh_ids':corp_id}
     head_map = {'X-Requested-With' : 'XMLHttpRequest'}
+    time.sleep(5)
     data = urllib.urlencode(form_map)
     req = urllib2.Request(follow_base_url, headers=head_map, data=data)
     json_data = urllib2.urlopen(req).read()
     return jsonpickle.decode(json_data)['data']['attentions'][0]['attention_cnt']
-
-
-def download_logo(local_filename, img_url):
-
-    try:
-
-	res = urllib2.urlopen(Request(img_url))
-
-	with open(local_filename,'wb') as f:
-	    f.write(res.read())
-
-    except Exception, e:
-	traceback.print_exc()
 
 
 
