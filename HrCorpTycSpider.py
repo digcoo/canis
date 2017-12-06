@@ -13,7 +13,7 @@ from MysqlClient import *
 
 send_headers = {
 	'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
-	'Cookie':'aliyungf_tc=AQAAAKh18Ue0MQYA/humtG70tzj7tt3l; csrfToken=-LeSbdX4T0WAZy-cOUkdLunr; TYCID=a809d290da5911e791a4154d51b959a5; undefined=a809d290da5911e791a4154d51b959a5; ssuid=4005208493; token=0088ea6f12724c8bb58c031634f5758b; _utm=8396f836fd8d42d5b769022892c6a948; tyc-user-info=%257B%2522token%2522%253A%2522eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzc2NDYxMTMzOSIsImlhdCI6MTUxMjU0NjgzNiwiZXhwIjoxNTI4MDk4ODM2fQ.PSvjr8GhlizQbQXVjC583rL9ElemHHvfQOpBdBmC2PHcKdfDAvHp1Xyaja7TMbI6cvQphrOTHAT_2gLX-1dXvA%2522%252C%2522integrity%2522%253A%25220%2525%2522%252C%2522state%2522%253A%25220%2522%252C%2522vipManager%2522%253A%25220%2522%252C%2522vnum%2522%253A%25220%2522%252C%2522onum%2522%253A%25220%2522%252C%2522mobile%2522%253A%252213764611339%2522%257D; auth_token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzc2NDYxMTMzOSIsImlhdCI6MTUxMjU0NjgzNiwiZXhwIjoxNTI4MDk4ODM2fQ.PSvjr8GhlizQbQXVjC583rL9ElemHHvfQOpBdBmC2PHcKdfDAvHp1Xyaja7TMbI6cvQphrOTHAT_2gLX-1dXvA; OA=z7lw31MaLaTgV7OFB5/SsbvfdKYtpoDcBrvR/vRBcDRVasVY/sWx/O2gS+FnzR1In2I2vZM7GRTm8G25p/Tg5+Gkq1MF693pOII7DJkavpCjMAqEQzqz+7UNB/kOm1kl; _csrf=GhddjbxkTmlBPdbF96vjnQ==; _csrf_bk=c4a9e983c82ffbe8771ed51bd5b9e32a; Hm_lvt_e92c8d65d92d534b0fc290df538b4758=1512546044; Hm_lpvt_e92c8d65d92d534b0fc290df538b4758=1512546537'
+	'Cookie':'aliyungf_tc=AQAAAOuk9F1+hQcAwPSh00djS97zwZFw; csrfToken=2SJbvvw6r4hK_yDo7JIuGoe3; _csrf=fP2wpN3R0xXMUMAFsW+DdQ==; OA=PMmez1HbMxsy8Dj3vWC/T+cUjwzIJ0WjZYl0UFGNiUJJdPn/YioWc1kunXM2W62mYmIOuqeqBUAYU1ZpZS+IwdzJgdWGA+8hagR6ExlY+Sc=; _csrf_bk=68d6b54e8c1fe1c8875b81f41268bd8f; TYCID=8c773700da8811e7a6e83d8811cfb80f; undefined=8c773700da8811e7a6e83d8811cfb80f; Hm_lvt_e92c8d65d92d534b0fc290df538b4758=1512566667; Hm_lpvt_e92c8d65d92d534b0fc290df538b4758=1512566667; ssuid=4005056640'
 }
 
 def get_city_symbol_map():
@@ -95,7 +95,10 @@ def get_page_corp_list(url):
 	traceback.print_exc()
 
 city_symbol_maps = get_city_symbol_map()
-for city_name in city_symbol_maps.keys():
-    print city_name + ':' + city_symbol_maps[city_name]
+city_index = 0
+for city_name in city_symbol_maps.keys()[200:300]:
     get_city_corp_list(city_symbol_maps[city_name])
+    city_index = city_index + 1
+    print city_name + ':' + city_symbol_maps[city_name] + ', city_index = ' + str(city_index)
+
 #get_page_corp_list('https://chenzhou.tianyancha.com/search/p1?key=%E4%BA%BA%E5%8A%9B%E8%B5%84%E6%BA%90&searchType=company')

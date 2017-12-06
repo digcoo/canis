@@ -147,7 +147,7 @@ def get_follow_number(corp_base_url):
 
 
 category_urls = get_industry_category_urls()
-for category_url in category_urls:
+for category_url in category_urls[4:5]:
     print category_url
     get_industry_corp_list(category_url)
 #get_corp_info('https://www.liepin.com/company/8405646/')
