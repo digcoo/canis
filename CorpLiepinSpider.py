@@ -48,7 +48,6 @@ def get_industry_corp_list(base_url):
 def get_page_corp_list(url):
     try:
 	html = urllib2.urlopen(url)
-	print html.read()
         bsObj = BeautifulSoup(html,"lxml")
         items = bsObj.findAll("a",{"class":"logo-box"})
 	corps = []

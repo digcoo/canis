@@ -1,0 +1,17 @@
+.project
+.pydevproject
+.idea
+test/results
+*.pyc
+*.orig
+MANIFEST
+*.egg-info
+*.egg
+*.swo
+*.swp
+*.out
+*.log
+dist
+build
+univ_logo
+*.txt
