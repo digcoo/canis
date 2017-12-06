@@ -46,7 +46,7 @@ def get_industry_corp_list(base_url):
 
 def get_page_corp_list(url):
     try:
-	time.sleep(5)
+	time.sleep(2)
 	html = urllib2.urlopen(url)
         bsObj = BeautifulSoup(html,"lxml")
         items = bsObj.findAll("a",{"class":"logo-box"})
@@ -55,8 +55,12 @@ def get_page_corp_list(url):
 	if items is not None and len(items) > 0:
 	    for item in items:
 		corp_info = get_corp_info(item["href"])
-		corps.append(corp_info)
+		if corp_info is not None:
+		    corps.append(corp_info)
 		time.sleep(2)
+
+	corps = compose_corps_with_follow(corps)
+	print jsonpickle.encode(corps)
 	return corps
 
     except Exception, e:
@@ -78,8 +82,11 @@ def get_corp_info(url):
 	    corp_summary = bsObj.find("p",{"class":"profile"}).text.strip()[:2000]
 
 	corp_industry_text = bsObj.find("ul",{"class":"new-compintro"}).findAll("li")[0].text
-	corp_industry  = corp_industry_text[corp_industry_text.find(u'：')+1:]
+	corp_industry  = corp_industry_text[corp_industry_text.find(u'：')+1:].strip()
 	corp_addr = bsObj.find("ul",{"class":"new-compintro"}).findAll("li")[2]["title"]
+	
+	corp_base_url = url[:len(url) - 1]
+	lid = corp_base_url[corp_base_url.rfind("/")+1:]
 
 	print "corp_name:\t"  + corp_name
 	print "corp_logo:\t"  + corp_logo
@@ -89,11 +96,41 @@ def get_corp_info(url):
 #	print "corp_summary:\t"  + corp_summary
 	print "*" * 120
 
-	return {"name":corp_name, "logo":corp_logo, "follow":corp_follow, "industry":corp_industry,"addr":corp_addr, "summary":corp_summary}
+	return {"lid":lid, "name":corp_name, "logo":corp_logo, "follow":corp_follow, "industry":corp_industry,"addr":corp_addr, "summary":corp_summary}
 
     except Exception, e:
 	traceback.print_exc()
-	return False
+	return None
+
+def compose_corps_with_follow(corps):
+    lids = [corp['lid'] for corp in corps]
+    follow_num_map = get_follow_numbers_by_lids(lids)
+    for corp in corps:
+	corp['follow'] = follow_num_map[corp['lid']]
+    return corps
+
+def get_follow_numbers_by_lids(ids):
+    try:
+	id_str = ''
+	for id in ids:
+	    id_str = id_str + str(id) + ','
+
+	form_map = {'userh_ids':id_str}
+	head_map = {'X-Requested-With' : 'XMLHttpRequest'}
+	
+	follow_base_url = 'https://c.liepin.com/connection/loadattention-b.json'
+	data = urllib.urlencode(form_map)
+	req = urllib2.Request(follow_base_url, headers=head_map, data=data)
+	json_data = urllib2.urlopen(req).read()
+	json_array = jsonpickle.decode(json_data)['data']['attentions']
+	follow_map = {}
+	for json_obj in json_array:
+	    follow_map[json_obj['userh_id']] = json_obj['attention_cnt']
+	return follow_map
+	
+    except Exception, e:
+	traceback.print_exc()
+    return None
 
 def get_follow_number(corp_base_url):
     follow_base_url = 'https://c.liepin.com/connection/loadattention-b.json'
