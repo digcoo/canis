@@ -28,7 +28,7 @@ def get_industry_category_urls():
 
 def get_industry_corp_list(base_url):
     try:
-	page = 0
+	page = 22
 	url = base_url.format(page)
 	corps = get_page_corp_list(url)
 	print "collect base_url = {0}, page = {1}, corp_num = {2}".format(base_url, page, len(corps))
@@ -60,7 +60,7 @@ def get_page_corp_list(url):
 		time.sleep(2)
 
 	corps = compose_corps_with_follow(corps)
-	print jsonpickle.encode(corps)
+#	print jsonpickle.encode(corps)
 	return corps
 
     except Exception, e:
@@ -88,11 +88,11 @@ def get_corp_info(url):
 	corp_base_url = url[:len(url) - 1]
 	lid = corp_base_url[corp_base_url.rfind("/")+1:]
 
-	print "corp_name:\t"  + corp_name
-	print "corp_logo:\t"  + corp_logo
-	print "corp_follow:\t"  + str(corp_follow)
-	print "corp_industry:\t"  + corp_industry
-	print "corp_addr:\t"  + corp_addr
+#	print "corp_name:\t"  + corp_name
+#	print "corp_logo:\t"  + corp_logo
+#	print "corp_follow:\t"  + str(corp_follow)
+#	print "corp_industry:\t"  + corp_industry
+#	print "corp_addr:\t"  + corp_addr
 #	print "corp_summary:\t"  + corp_summary
 	print "*" * 120
 
@@ -147,7 +147,7 @@ def get_follow_number(corp_base_url):
 
 
 category_urls = get_industry_category_urls()
-for category_url in category_urls:
+for category_url in category_urls[3:4]:
     print category_url
     get_industry_corp_list(category_url)
 #get_corp_info('https://www.liepin.com/company/8405646/')
