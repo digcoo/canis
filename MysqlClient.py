@@ -46,8 +46,8 @@ class MysqlClient:
 	    if local_universities == None or len(local_universities) == 0:
 		self.conn()
                 with self.connection.cursor() as cursor:
-                    sql = "INSERT INTO `digcoo_anas_base_university` (`local_name`, `cn_name`, `nation`, `gmt_created`, `gmt_updated`, `del`) values(%s, %s, '中国', now(), now(), 0)"
-		    cursor.execute(sql, (university['local_name'], university['cn_name']))
+                    sql = "INSERT INTO `digcoo_anas_base_university` (`local_name`, `cn_name`, `nation`,  `logo`, `gmt_created`, `gmt_updated`, `del`) values(%s, %s, %s, %s, now(), now(), 0)"
+		    cursor.execute(sql, (university['local_name'], university['cn_name'], university['nation'], university['logo']))
                     self.connection.commit()
 
         except Exception, e:    
@@ -67,6 +67,17 @@ class MysqlClient:
         except Exception, e:
             traceback.print_exc()
         return None
+
+
+    def add_batch_universities(self, universities):
+        try:
+            for university in universities:
+                self.add_university(university)
+        except Exception, e:
+            traceback.print_exc()
+        finally:
+            self.close()
+
 
 
 
